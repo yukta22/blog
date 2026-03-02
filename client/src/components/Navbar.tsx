@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 // import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
       <div className="container">
         <Link className="navbar-brand" to="/">MiniBlog</Link>
         <div className="ms-auto d-flex gap-2">
-          {/* <ThemeToggle /> */}
+          <ThemeToggle />
           {token ? (
             <>
               <Link to="/create" className="btn btn-light btn-sm">Create</Link>

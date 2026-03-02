@@ -1,9 +1,17 @@
 import { createContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 
-export const ThemeContext = createContext();
+interface ThemeContextType {
+  dark: boolean;
+  setDark: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const ThemeProvider = ({ children }) => {
-  const [dark, setDark] = useState(
+export const ThemeContext = createContext<ThemeContextType>(
+  {} as ThemeContextType
+);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [dark, setDark] = useState<boolean>(
     localStorage.getItem("theme") === "dark"
   );
 
