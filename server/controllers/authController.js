@@ -35,10 +35,10 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  console.log("JWT_SECRET:", process.env.JWT_SECRET);
+  console.log("req",req.body)
   const { username, password } = req.body;
   const user = await User.findOne({ username });
-
+  console.log("user",user)
   if (user && (await bcrypt.compare(password, user.password))) {
     res.status(201).json({
       _id: user._id,

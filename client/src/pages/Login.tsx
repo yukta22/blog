@@ -11,8 +11,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const {data} = await axios.post(`${API}/auth/login`, {form});
-      localStorage.setItem("token", data.token)
+      const {data} = await axios.post(`${API}/auth/login`, form);
+      localStorage.setItem("token", data.token);
+      if(data.token){
+        navigate("/posts")
+      }
     } catch (err: any) {
       alert(err.message);
     }

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -45,32 +46,27 @@ const CreatePost = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API}/posts/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
+     await axios.post(
+        `${API}/posts/create`,
+        {
           title: form.title,
           content: form.content,
           tags: form.tags
             ? form.tags.split(",").map((tag) => tag.trim())
-            : []
-        })
-      });
-      console.log("res",res)
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to create post");
-      }
+            : [],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Clear form
       setForm({ title: "", content: "", tags: "" });
 
       // Redirect to home
-      navigate("/");
+      navigate("/posts");
     } catch (err: any) {
       setError(err.message);
     }
