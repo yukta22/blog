@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
+import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
 
-const Home = () => {
+const Posts = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [pages, setPages] = useState<number>(1);
@@ -13,11 +14,10 @@ const Home = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
+      const res = await axios.get(
         `${API}/posts?page=${page}&search=${search}`,
-        { method: "GET" }
       );
-      const data = await res.json();
+      const data = await res.data;
       setPosts(data.posts);
       setPages(data.pages);
     } catch (err) {
@@ -45,7 +45,7 @@ const Home = () => {
 
       {loading ? <p>Loading...</p> :
         posts.map(post => (
-          <PostCard key={post._id} post={post} refresh={fetchPosts} />
+          <PostCard key={post._id} post={post} fetchPosts={fetchPosts} />
         ))
       }
 
@@ -64,4 +64,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Posts;

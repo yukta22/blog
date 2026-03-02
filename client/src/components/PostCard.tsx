@@ -1,34 +1,30 @@
+import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
 
 interface Props {
   post: any;
-  refresh: () => void;
+  fetchPosts: () => void;
 }
 
-const PostCard = ({ post, refresh }: Props) => {
+const PostCard = ({ post, fetchPosts }: Props) => {
   const token = localStorage.getItem("token");
 
   const deletePost = async () => {
     if (!window.confirm("Delete this post?")) return;
 
     try {
-      const res = await fetch(`${API}/posts/${post._id}`, {
-        method: "DELETE",
+      await axios.delete(`${API}/posts/${post._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to delete post");
-      }
-
-      refresh();
+      fetchPosts();
     } catch (err: any) {
-      alert(err.message);
+      alert(
+        err.response?.data?.message || "Failed to delete post"
+      );
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -26,43 +27,24 @@ const Register = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+        e.preventDefault();
+        setError("");
+        setLoading(true);
 
-    if (!form.username || !form.password) {
-      setError("All fields are required.");
-      return;
+        try {
+          const { data } = await axios.post(`${API}/auth/register`, form)
+          localStorage.setItem("token", data.token);
+
+          navigate("/");
+        } catch (err  :any) {
+          setError(
+              err.response?.data?.message || "Registration failed"
+          );
+        } finally {
+            setLoading(false);
+        }
+
     }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch(`${API}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(form)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
-
-      // Optional: Auto login after register
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-
-      navigate("/login");
-    } catch (err: any) {
-      setError(err.message);
-    }
-
-    setLoading(false);
-  };
 
   return (
     <div className="container py-5">

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const API = import.meta.env.VITE_API_URL;
@@ -10,25 +11,8 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(form)
-      });
-
-      const data = await res.json();
-      console.log("LOGIN RESPONSE:", data);
-
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      // ✅ Save real token
-      localStorage.setItem("token", data.token);
-
-      navigate("/");
+      const {data} = await axios.post(`${API}/auth/login`, {form});
+      localStorage.setItem("token", data.token)
     } catch (err: any) {
       alert(err.message);
     }
